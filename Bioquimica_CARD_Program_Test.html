@@ -228,12 +228,11 @@
         
             <button onclick="adicionarCarta()">Adicionar Carta ao Conjunto</button>
             <button onclick="limparCartas()">Limpar Conjunto</button>
+            <button onclick="LimparUltima()">Limpar Ultima</button>
             <button onclick="gerarPDF()">Gerar PDF</button>
 
             <div id="conjunto-cartas"></div>
-
             <!-- Local onde as cartas criadas serão exibidas -->
-            <div id="conjunto-cartas"></div>
 
             <div class="card" id="card">
                 <h1 id="card-nome">Nome do Exame</h1>
@@ -293,6 +292,7 @@
             }
 
             let cartas = []; // Array para armazenar as cartas criadas
+            let ultima = "";
 
             function adicionarCarta() {
                 // Coletar os valores preenchidos no formulário
@@ -345,6 +345,7 @@
                             <p><strong>Diminuição:</strong> ${carta.diminuicao}</p>
                         </div>
                     `;
+                    ultima = cardHTML;
                     container.innerHTML += cardHTML; // Adiciona a nova carta ao conjunto
                 });
             }
@@ -352,6 +353,18 @@
             function limparCartas() {
                 cartas = []; // Zera o array de cartas
                 document.getElementById("conjunto-cartas").innerHTML = ""; // Limpa a exibição
+            }
+
+            function LimparUltima(){
+                const div = document.getElementById('conjunto-cartas');
+                const content = div.innerHTML;
+                if (content.includes(ultima)) {
+                    const newText = content.replace(ultima, ''); // Remove a ultima div criada
+                    div.innerHTML = newText; // atualiza o mostrador
+                    console.log('A sequência foi removida!');
+                } else {
+                    console.log('A sequência não foi encontrada.');
+                }
             }
 
             function gerarPDF() {
