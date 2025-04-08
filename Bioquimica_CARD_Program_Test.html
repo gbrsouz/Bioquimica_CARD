@@ -1,0 +1,395 @@
+
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f4f6f9;
+            font-family: 'Arial', sans-serif;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            gap: 40px;
+            justify-content: center;
+            width: 90%;
+            max-width: 1200px;
+        }
+        .formulario {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+            width: 350px;
+            display: flex;
+            flex-direction: column;
+        }
+        .formulario label {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .formulario input, .formulario select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+       .card {
+    width: 63mm;  /* Largura padrão das cartas de baralho */
+    height: 95mm; /* Altura padrão */
+    max-width: 250px; /* Para manter uma boa escala em telas grandes */
+    max-height: 350px;
+    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+    border-radius: 10px;
+    padding: 10px; /* Reduzido para caber melhor */
+    box-shadow: 0px 5px 10px rgba(0,0,0,0.3);
+    text-align: center;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 4px solid #162d69;
+    font-size: 12px; /* Tamanho reduzido para caber no formato */
+    overflow: hidden; /* Evita que elementos ultrapassem o card */
+}
+
+.card h1 {
+    font-size: 16px; /* Título ajustado */
+    font-weight: bold;
+    margin-bottom: 5px;
+    padding: 5px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.card .category {
+    font-size: 12px; /* Ajuste da categoria */
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 4px;
+    border-radius: 6px;
+    margin-bottom: 6px;
+}
+
+.card p {
+    font-size: 10px; /* Redução do tamanho do texto */
+    margin: 2px 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 4px;
+    border-radius: 6px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.card img {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+}
+
+.card img.representacao {
+    width: 100%; /* Ocupa toda a largura do card */
+    max-height: 20mm; /* Reduz ainda mais a altura para não ocupar muito espaço */
+    object-fit: cover; /* Garante que a imagem preencha o espaço corretamente */
+    border-radius: 6px;
+    border: 2px solid white;
+    margin-bottom: 5px;
+}
+
+.card * {
+    position: relative;
+    z-index: 1;
+}
+
+</style>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<body>
+    <h1>Gerador de Cartas de Bioquímica Clínica</h1>
+    <div class="container">
+        <div class="formulario">
+            <label>Imagem da Representação:</label>
+            <input type="file" id="imagemRepresentacao" accept="image/*" onchange="atualizarRepresentacao()">
+            <label>Imagem de Fundo:</label>
+            <input type="file" id="imagemFundo" accept="image/*" onchange="atualizarImagem()">
+            <label>Nome do Exame:</label>
+            <input type="text" id="nome" placeholder="Troponina, Creatinina..." oninput="atualizarCarta()">
+            
+            <label>Categoria:</label>
+            <select id="categoria" onchange="atualizarCarta()">
+                <option value="Equilíbrio Hidro-eletrolítico">Equilíbrio Hidro-eletrolítico</option>
+                <option value="Função Renal">Função Renal</option>
+                <option value="Função Hepática">Função Hepática</option>
+                <option value="Equilíbrio ácido-base">Equilíbrio ácido-base</option>
+                <option value="Enzimologia">Enzimologia</option>
+                <option value="Metabolismo Carboidratos">Metabolismo Carboidratos</option>
+                <option value="Metabolismo Lipídeos">Metabolismo Lipídeos</option>
+                <option value="Função Endócrina">Função Endócrina</option>
+                <option value="Metabolismo Ósseo">Metabolismo Ósseo</option>
+                <option value="Função Pancreática">Função Pancreática</option>
+                <option value="Função Gástrica">Função Gástrica</option>
+                <option value="Avaliação Nutricional">Avaliação Nutricional</option>
+                <option value="Marcadores Tumorais">Marcadores Tumorais</option>
+                <option value="Saúde Materno-fetal">Saúde Materno-fetal</option>
+                <option value="Metabolismo de Proteínas">Metabolismo de Proteínas</option>
+            </select>
+            
+            <label>Função Biológica:</label>
+            <input type="text" id="funcao" placeholder="Regulação do metabolismo, transporte de oxigênio..." oninput="atualizarCarta()">
+            
+            <label>Amostra:</label>
+            <select id="amostra" onchange="atualizarCarta()">
+                <option value="Sangue">Sangue</option>
+                <option value="Urina">Urina</option>
+                <option value="Fezes">Fezes</option>
+                <option value="Saliva">Saliva</option>
+                <option value="Escarro">Escarro</option>
+                <option value="Secreção vaginal">Secreção vaginal</option>
+                <option value="Secreção nasal">Secreção nasal</option>
+                <option value="Líquido cefalorraquidiano (LCR)">Líquido cefalorraquidiano (LCR)</option>
+                <option value="Líquido pleural">Líquido pleural</option>
+                <option value="Líquido peritoneal">Líquido peritoneal</option>
+                <option value="Líquido sinovial">Líquido sinovial</option>
+                <option value="Líquido amniótico">Líquido amniótico</option>
+                <option value="Biópsias de tecido">Biópsias de tecido</option>
+                <option value="Fragmentos de cálculos">Fragmentos de cálculos</option>
+                <option value="Aspirados (ex.: aspirado traqueal)">Aspirados (ex.: aspirado traqueal)</option>
+                <option value="Secreção de feridas">Secreção de feridas</option>
+                <option value="Plasma">Plasma</option>
+                <option value="Soro">Soro</option>
+                <option value="Material genético (DNA/RNA)">Material genético (DNA/RNA)</option>
+            </select>
+            
+            <label>Coleta (Tubo):</label>
+            <select id="tubo" onchange="atualizarCarta()">
+                <option value="Tubo com Tampa Azul">Tubo com Tampa Azul: Citrato de sódio</option>
+                <option value="Tubo com Tampa Vermelha ou Amarela">Tubo com Tampa Vermelha ou Amarela: Ativador de coágulo e/ou gel separador</option>
+                <option value="Tubo com Tampa Verde">Tubo com Tampa Verde: Heparina</option>
+                <option value="Tubo com Tampa Roxa">Tubo com Tampa Roxa: EDTA</option>
+                <option value="Tubo com Tampa Cinza">Tubo com Tampa Cinza: Fluoreto de sódio</option>
+                <option value="Tubo com Tampa Azul-Escura com Anel Preto">Tubo com Tampa Azul-Escura com Anel Preto: Heparina de sódio (para traços de elementos)</option>
+                <option value="Tubo com Tampa Branca">Tubo com Tampa Branca: Sem aditivo (usado para coleta de soro)</option>
+                <option value="Tubo com Tampa Preta">Tubo com Tampa Preta: Citrato de sódio (para velocidade de hemossedimentação)</option>
+                <option value="Garrafa de Hemocultura">Garrafa de Hemocultura</option>
+                <option value="Swab para Coleta de Amostras">Swab para Coleta de Amostras</option>
+                <option value="Frascos Estéril">Frascos Estéril</option>
+                <option value="Seringa para Gasometria">Seringa para Gasometria: Heparina</option>
+            </select>
+            
+            <label>Valores de Referência:</label>
+            <input type="text" id="referencia" placeholder="0.01 - 0.03 ng/mL" oninput="atualizarCarta()">
+            
+            <label>Preparo 1:</label>
+            <select id="preparo1" onchange="atualizarCarta()">
+                <option value="Jejum de 8 a 14 horas">Jejum de 8 a 14 horas</option>
+                <option value="Não necessita jejum">Não necessita jejum</option>
+                <option value="Coleta pela manhã">Coleta pela manhã</option>
+                <option value="Coleta noturna">Coleta noturna</option>
+                <option value="Abstinência de álcool por 72 horas">Abstinência de álcool por 72 horas</option>
+                <option value="Evitar exercícios físicos intensos">Evitar exercícios físicos intensos</option>
+                <option value="Primeira urina da manhã">Primeira urina da manhã</option>
+                <option value="Urina com no mínimo 4 horas de intervalo após a última micção">Urina com no mínimo 4 horas de intervalo após a última micção</option>
+                <option value="Repouso de 30 minutos antes da coleta">Repouso de 30 minutos antes da coleta</option>
+                <option value="Evitar relação sexual 2 dias antes da coleta">Evitar relação sexual 2 dias antes da coleta</option>
+                <option value="Coleta após assepsia bucal">Coleta após assepsia bucal</option>
+                <option value="Coleta após repouso de 15 minutos">Coleta após repouso de 15 minutos</option>
+                <option value="Coleta após ingestão de água">Coleta após ingestão de água</option>
+                <option value="Coleta após dieta específica">Coleta após dieta específica</option>
+                <option value="Coleta após administração de medicamento">Coleta após administração de medicamento</option>
+                <option value="Coleta em período específico do ciclo menstrual">Coleta em período específico do ciclo menstrual</option>
+                <option value="Coleta após ingestão de sobrecarga">Coleta após ingestão de sobrecarga</option>
+                <option value="Coleta após exercício físico leve">Coleta após exercício físico leve</option>
+                <option value="Coleta de 24 horas">Coleta de 24 horas</option>
+            </select>
+            
+                       
+            <label>Aumento:</label>
+            <input type="text" id="aumento" placeholder="Infarto, Doença Renal..." oninput="atualizarCarta()">
+            
+            <label>Diminuição:</label>
+            <input type="text" id="diminuicao" placeholder="Desnutrição, Hipotireoidismo..." oninput="atualizarCarta()">
+        </div>
+		
+		<button onclick="adicionarCarta()">Adicionar Carta ao Conjunto</button>
+<button onclick="limparCartas()">Limpar Conjunto</button>
+<button onclick="gerarPDF()">Gerar PDF</button>
+
+<div id="conjunto-cartas"></div>
+
+<!-- Local onde as cartas criadas serão exibidas -->
+<div id="conjunto-cartas"></div>
+
+        <div class="card" id="card">
+            <h1 id="card-nome">Nome do Exame</h1>
+            
+            <p class="category" id="card-categoria">⚕️ Categoria</p>
+            <p><strong>Função Biológica:</strong> <span id="card-funcao">--</span></p>
+            <p><strong>Amostra:</strong> <span id="card-amostra">--</span></p>
+            <p><strong>Coleta (Tubo):</strong> <span id="card-tubo">--</span></p>
+            <p><strong>Valores de Referência:</strong> <span id="card-referencia">--</span></p>
+            <p><strong>Preparo:</strong> <span id="card-preparo">--</span></p>
+            <p><strong>Aumento:</strong> <span id="card-aumento">--</span></p>
+            <p><strong>Diminuição:</strong> <span id="card-diminuicao">--</span></p>
+        </div>
+    </div>
+    <script>
+        function atualizarCarta() {
+            document.getElementById("card-nome").innerText = document.getElementById("nome").value;
+            document.getElementById("card-categoria").innerText = document.getElementById("categoria").value;
+            document.getElementById("card-funcao").innerText = document.getElementById("funcao").value;
+            document.getElementById("card-amostra").innerText = document.getElementById("amostra").value;
+            document.getElementById("card-tubo").innerText = document.getElementById("tubo").value;
+            document.getElementById("card-referencia").innerText = document.getElementById("referencia").value;
+            let preparo1Value = document.getElementById("preparo1").value;
+			// Se "preparo1" estiver vazio, exibe um traço ("--") em vez de "undefined"
+			document.getElementById("card-preparo").innerText = preparo1Value ? preparo1Value : "--";
+            document.getElementById("card-aumento").innerText = document.getElementById("aumento").value;
+            document.getElementById("card-diminuicao").innerText = document.getElementById("diminuicao").value;
+        }
+            function atualizarImagem() {
+            const input = document.getElementById('imagemFundo');
+            const card = document.getElementById('card');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    card.style.backgroundImage = `url('${e.target.result}')`;
+                    card.style.backgroundSize = 'cover';
+                    card.style.backgroundPosition = 'center';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        function atualizarRepresentacao() {
+            const input = document.getElementById('imagemRepresentacao');
+            const img = document.getElementById('card-imagem-representacao');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+let cartas = []; // Array para armazenar as cartas criadas
+
+function adicionarCarta() {
+    // Coletar os valores preenchidos no formulário
+    let nome = document.getElementById("nome").value;
+    let categoria = document.getElementById("categoria").value;
+    let funcao = document.getElementById("funcao").value;
+    let amostra = document.getElementById("amostra").value;
+    let tubo = document.getElementById("tubo").value;
+    let referencia = document.getElementById("referencia").value;
+    let preparo1 = document.getElementById("preparo1").value;
+    let aumento = document.getElementById("aumento").value;
+    let diminuicao = document.getElementById("diminuicao").value;
+    
+    // Pegar a imagem de fundo (se houver)
+    let imagemFundo = document.getElementById("imagemFundo").files[0];
+    let imagemRepresentacao = document.getElementById("imagemRepresentacao").files[0];
+
+    // Criar um objeto para a carta
+    let carta = {
+    nome, categoria, funcao, amostra, tubo, referencia,
+    preparo1: preparo1 ? preparo1 : "--", // ✅ Evita "undefined", coloca "--" se estiver vazio
+    aumento, diminuicao,
+    imagemFundo: imagemFundo ? URL.createObjectURL(imagemFundo) : null,
+    imagemRepresentacao: imagemRepresentacao ? URL.createObjectURL(imagemRepresentacao) : null
+};
+
+
+    // Adicionar ao array
+    cartas.push(carta);
+    
+    // Atualizar a exibição do conjunto de cartas
+    renderizarCartas();
+}
+
+function renderizarCartas() {
+    let container = document.getElementById("conjunto-cartas");
+    container.innerHTML = ""; // Limpa antes de renderizar novamente
+
+    cartas.forEach((carta, index) => {
+        let cardHTML = `
+            <div class="card" style="background-image: ${carta.imagemFundo ? `url('${carta.imagemFundo}')` : 'none'};">
+                ${carta.imagemRepresentacao ? `<img class="representacao" src="${carta.imagemRepresentacao}" alt="Imagem Representativa">` : ''}
+                <h1>${carta.nome}</h1>
+                <p class="category">${carta.categoria}</p>
+                <p><strong>Função Biológica:</strong> ${carta.funcao}</p>
+                <p><strong>Amostra:</strong> ${carta.amostra}</p>
+                <p><strong>Coleta (Tubo):</strong> ${carta.tubo}</p>
+                <p><strong>Valores de Referência:</strong> ${carta.referencia}</p>
+				<p><strong>Preparo:</strong> ${carta.preparo1 ? carta.preparo1 : "--"}</p>
+                <p><strong>Aumento:</strong> ${carta.aumento}</p>
+                <p><strong>Diminuição:</strong> ${carta.diminuicao}</p>
+            </div>
+        `;
+        container.innerHTML += cardHTML; // Adiciona a nova carta ao conjunto
+    });
+}
+
+function limparCartas() {
+    cartas = []; // Zera o array de cartas
+    document.getElementById("conjunto-cartas").innerHTML = ""; // Limpa a exibição
+}
+
+function gerarPDF() {
+    const { jsPDF } = window.jspdf;
+    let doc = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4"
+    });
+
+    let larguraCarta = 63;  // Largura real da carta em mm
+    let alturaCarta = 88;   // Altura real da carta em mm
+    let colunas = 3;
+    let linhas = 3;
+    let espacamento = 5;
+    let margemX = 10;
+    let margemY = 10;
+    
+    let cartasElementos = document.querySelectorAll(".card"); // Seleciona todas as cartas
+
+    if (cartasElementos.length === 0) {
+        alert("Nenhuma carta para gerar o PDF!");
+        return;
+    }
+
+    let imagensPromises = Array.from(cartasElementos).map(carta => {
+        return html2canvas(carta, { scale: 3 }).then(canvas => canvas.toDataURL("image/png"));
+    });
+
+    Promise.all(imagensPromises).then(imagens => {
+        imagens.forEach((imgData, index) => {
+            let col = index % colunas;
+            let lin = Math.floor((index % (colunas * linhas)) / colunas);
+            let x = margemX + col * (larguraCarta + espacamento);
+            let y = margemY + lin * (alturaCarta + espacamento);
+
+            doc.addImage(imgData, "PNG", x, y, larguraCarta, alturaCarta);
+
+            // Se atingiu 9 cartas (3x3), cria nova página
+            if ((index + 1) % (colunas * linhas) === 0 && index + 1 !== imagens.length) {
+                doc.addPage();
+            }
+        });
+
+        doc.save("cartas_bioquimica.pdf");
+    });
+}
+
+</script>
+</body>
+</html>
