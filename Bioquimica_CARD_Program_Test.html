@@ -332,7 +332,7 @@
 
                 cartas.forEach((carta, index) => {
                     let cardHTML = `
-                        <div class="card" style="background-image: ${carta.imagemFundo ? `url('${carta.imagemFundo}')` : 'none'};">
+                        <div class="card" id="${cartas.indexOf(carta)}" style="background-image: ${carta.imagemFundo ? `url('${carta.imagemFundo}')` : 'none'};">
                             ${carta.imagemRepresentacao ? `<img class="representacao" src="${carta.imagemRepresentacao}" alt="Imagem Representativa">` : ''}
                             <h1>${carta.nome}</h1>
                             <p class="category">${carta.categoria}</p>
@@ -356,14 +356,13 @@
             }
 
             function LimparUltima(){
-                const div = document.getElementById('conjunto-cartas');
-                const content = div.innerHTML;
-                if (content.includes(ultima)) {
-                    const newText = content.replace(ultima, ''); // Remove a ultima div criada
-                    div.innerHTML = newText; // atualiza o mostrador
-                    console.log('A sequência foi removida!');
+                const div = document.getElementById((cartas.length - 1).toString());
+                if (div) {
+                    div.remove();
+                    cartas.splice((cartas.length - 1), 1);
+                    console.log('Div removida com sucesso!');
                 } else {
-                    console.log('A sequência não foi encontrada.');
+                    console.log('Erro: Div não encontrada');
                 }
             }
 
