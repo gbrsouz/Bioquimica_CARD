@@ -21,7 +21,7 @@
                 gap: 40px;
                 justify-content: center;
                 width: 90%;
-                max-width: 1200px;
+                max-width: 1300px;
             }
 
             .formulario {
@@ -29,9 +29,9 @@
                 padding: 20px;
                 border-radius: 12px;
                 box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
-                width: 350px;
                 display: flex;
                 flex-direction: column;
+                flex-wrap: wrap;
             }
 
             .formulario label {
@@ -40,9 +40,9 @@
             }
 
             .formulario input, .formulario select {
-                width: 93%;
+                width: 350px;
                 padding: 10px;
-                margin-top: 5px;
+                margin: 10px;
                 border-radius: 6px;
                 border: 1px solid #ccc;
                 font-size: 14px;
@@ -115,7 +115,18 @@
                 position: relative;
                 z-index: 1;
             }
+            
+            .botoes{
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+            }
 
+            button{
+                height: 85px;
+                width: 150px;
+                margin-top: 50px;
+            }
         </style>
     </head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -225,11 +236,13 @@
                 <label>Diminuição:</label>
                 <input type="text" id="diminuicao" placeholder="Desnutrição, Hipotireoidismo..." oninput="atualizarCarta()">
             </div>
-        
-            <button onclick="adicionarCarta()">Adicionar Carta ao Conjunto</button>
-            <button onclick="limparCartas()">Limpar Conjunto</button>
-            <button onclick="LimparUltima()">Limpar Ultima</button>
-            <button onclick="gerarPDF()">Gerar PDF</button>
+            <div class="botoes">
+                <button onclick="adicionarCarta()">Adicionar Carta ao Conjunto</button>
+                <button onclick="limparCartas()">Limpar Conjunto</button>
+                <button onclick="LimparUltima()">Limpar Ultima</button>
+                <button onclick="gerarPDF()">Gerar PDF</button>
+            </div>
+            
 
             <div id="conjunto-cartas"></div>
             <!-- Local onde as cartas criadas serão exibidas -->
