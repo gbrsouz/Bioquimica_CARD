@@ -250,8 +250,7 @@
                 <button onclick="gerarPDF()">Gerar PDF</button>
             </div>
             
-
-            <div id="conjunto-cartas"></div>
+            <div class="conjuntoCartas" id="conjunto-cartas"></div>
             <!-- Local onde as cartas criadas serão exibidas -->
 
             <div class="card" id="card">
@@ -368,6 +367,7 @@
                     ultima = cardHTML;
                     container.innerHTML += cardHTML; // Adiciona a nova carta ao conjunto
                 });
+                adicionarSelecao();
             }
 
             function limparCartas() {
@@ -386,8 +386,24 @@
                 }
             }
 
+            let ultimaSelecionada = null;
+
+            function adicionarSelecao(){
+                document.getElementById('conjunto-cartas').addEventListener('click', (event) => {
+                    const carta = event.target.closest('.card');
+                    if (carta) {
+                        ultimaSelecionada = carta.id;
+                    }
+                });
+            }
+            
             function EditarSelecionada(){
-                
+                if (ultimaSelecionada) {
+                    const conteudo = document.getElementById(ultimaSelecionada).innerHTML;
+                    console.log(conteudo);
+                } else {
+                    alert('Selecione uma das cartas primeiro.');
+                }
             }
 
             function gerarPDF() {
