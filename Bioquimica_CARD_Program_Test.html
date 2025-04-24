@@ -67,6 +67,11 @@
                 font-size: 12px; /* Tamanho reduzido para caber no formato */
                 overflow: hidden; /* Evita que elementos ultrapassem o card */
             }
+            .card:focus{
+                outline:none;
+                border:5px solid blue;
+                box-shadow: 0 0 5px blue;
+            }
 
             .card h1 {
                 font-size: 16px; /* Título ajustado */
@@ -241,6 +246,7 @@
                 <button onclick="adicionarCarta()">Adicionar Carta ao Conjunto</button>
                 <button onclick="limparCartas()">Limpar Conjunto</button>
                 <button onclick="LimparUltima()">Limpar Ultima</button>
+                <button onclick="EditarSelecionada()">Editar Carta Selecionada</button>
                 <button onclick="gerarPDF()">Gerar PDF</button>
             </div>
             
@@ -346,17 +352,17 @@
 
                 cartas.forEach((carta, index) => {
                     let cardHTML = `
-                        <div class="card" id="${cartas.indexOf(carta)}" style="background-image: ${carta.imagemFundo ? `url('${carta.imagemFundo}')` : 'none'};">
+                        <div class="card" tabindex="0" id="${cartas.indexOf(carta)}" style="background-image: ${carta.imagemFundo ? `url('${carta.imagemFundo}')` : 'none'};">
                             ${carta.imagemRepresentacao ? `<img class="representacao" src="${carta.imagemRepresentacao}" alt="Imagem Representativa">` : ''}
-                            <h1>${carta.nome}</h1>
-                            <p class="category">${carta.categoria}</p>
-                            <p><strong>Função Biológica:</strong> ${carta.funcao}</p>
-                            <p><strong>Amostra:</strong> ${carta.amostra}</p>
-                            <p><strong>Coleta (Tubo):</strong> ${carta.tubo}</p>
-                            <p><strong>Valores de Referência:</strong> ${carta.referencia}</p>
-                            <p><strong>Preparo:</strong> ${carta.preparo1 ? carta.preparo1 : "--"}</p>
-                            <p><strong>Aumento:</strong> ${carta.aumento}</p>
-                            <p><strong>Diminuição:</strong> ${carta.diminuicao}</p>
+                            <h1 id="nome_carta${cartas.indexOf(carta)}">${carta.nome}</h1>
+                            <p class="category" id="categoria_carta${cartas.indexOf(carta)}">${carta.categoria}</p>
+                            <p id="funcao_carta${cartas.indexOf(carta)}"><strong>Função Biológica:</strong> ${carta.funcao}</p>
+                            <p id="amostra_carta${cartas.indexOf(carta)}"><strong>Amostra:</strong> ${carta.amostra}</p>
+                            <p id="tubo_carta${cartas.indexOf(carta)}"><strong>Coleta (Tubo):</strong> ${carta.tubo}</p>
+                            <p id="referencia_carta${cartas.indexOf(carta)}"><strong>Valores de Referência:</strong> ${carta.referencia}</p>
+                            <p id="preparo_carta${cartas.indexOf(carta)}"><strong>Preparo:</strong> ${carta.preparo1 ? carta.preparo1 : "--"}</p>
+                            <p id="aumento_carta${cartas.indexOf(carta)}"><strong>Aumento:</strong> ${carta.aumento}</p>
+                            <p id="diminuicao_carta${cartas.indexOf(carta)}"><strong>Diminuição:</strong> ${carta.diminuicao}</p>
                         </div>
                     `;
                     ultima = cardHTML;
@@ -378,6 +384,10 @@
                 } else {
                     console.log('Erro: Div não encontrada');
                 }
+            }
+
+            function EditarSelecionada(){
+                
             }
 
             function gerarPDF() {
