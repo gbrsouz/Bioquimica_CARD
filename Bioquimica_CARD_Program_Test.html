@@ -246,7 +246,7 @@
                 <button onclick="adicionarCarta()">Adicionar Carta ao Conjunto</button>
                 <button onclick="limparCartas()">Limpar Conjunto</button>
                 <button onclick="LimparUltima()">Limpar Ultima</button>
-                <button onclick="EditarSelecionada()">Editar Carta Selecionada</button>
+                <button onclick="LimparSelecionada()">Limpar Carta Selecionada</button>
                 <button onclick="gerarPDF()">Gerar PDF</button>
             </div>
             
@@ -267,6 +267,9 @@
             </div>
         </div>
         <script>
+
+            //atualizador da carta de exemplo
+
             function atualizarCarta() {
                 document.getElementById("card-nome").innerText = document.getElementById("nome").value;
                 document.getElementById("card-categoria").innerText = document.getElementById("categoria").value;
@@ -280,6 +283,8 @@
                 document.getElementById("card-aumento").innerText = document.getElementById("aumento").value;
                 document.getElementById("card-diminuicao").innerText = document.getElementById("diminuicao").value;
             }
+
+            //atualizador da imagem
 
             function atualizarImagem() {
                 const input = document.getElementById('imagemFundo');
@@ -295,6 +300,8 @@
                     reader.readAsDataURL(input.files[0]);
                 }
             }
+
+            //atulizador da representação
 
             function atualizarRepresentacao() {
                 const input = document.getElementById('imagemRepresentacao');
@@ -312,6 +319,10 @@
 
             let cartas = []; // Array para armazenar as cartas criadas
             let ultima = "";
+
+            //--------------------------------------------------------------
+            //------------------ Botão de adicionar carta ------------------
+            //--------------------------------------------------------------
 
             function adicionarCarta() {
                 // Coletar os valores preenchidos no formulário
@@ -345,6 +356,10 @@
                 renderizarCartas();
             }
 
+            //--------------------------------------------------------------
+            //-------------- Renderizador de todas as cartas ---------------
+            //--------------------------------------------------------------
+
             function renderizarCartas() {
                 let container = document.getElementById("conjunto-cartas");
                 container.innerHTML = ""; // Limpa antes de renderizar novamente
@@ -353,27 +368,34 @@
                     let cardHTML = `
                         <div class="card" tabindex="0" id="${cartas.indexOf(carta)}" style="background-image: ${carta.imagemFundo ? `url('${carta.imagemFundo}')` : 'none'};">
                             ${carta.imagemRepresentacao ? `<img class="representacao" src="${carta.imagemRepresentacao}" alt="Imagem Representativa">` : ''}
-                            <h1 id="nome_carta${cartas.indexOf(carta)}">${carta.nome}</h1>
-                            <p class="category" id="categoria_carta${cartas.indexOf(carta)}">${carta.categoria}</p>
-                            <p id="funcao_carta${cartas.indexOf(carta)}"><strong>Função Biológica:</strong> ${carta.funcao}</p>
-                            <p id="amostra_carta${cartas.indexOf(carta)}"><strong>Amostra:</strong> ${carta.amostra}</p>
-                            <p id="tubo_carta${cartas.indexOf(carta)}"><strong>Coleta (Tubo):</strong> ${carta.tubo}</p>
-                            <p id="referencia_carta${cartas.indexOf(carta)}"><strong>Valores de Referência:</strong> ${carta.referencia}</p>
-                            <p id="preparo_carta${cartas.indexOf(carta)}"><strong>Preparo:</strong> ${carta.preparo1 ? carta.preparo1 : "--"}</p>
-                            <p id="aumento_carta${cartas.indexOf(carta)}"><strong>Aumento:</strong> ${carta.aumento}</p>
-                            <p id="diminuicao_carta${cartas.indexOf(carta)}"><strong>Diminuição:</strong> ${carta.diminuicao}</p>
+                            <h1 id="nome_carta${cartas.indexOf(carta)}" onclick="editar(this.id)">${carta.nome}</h1>
+                            <p class="category" id="categoria_carta${cartas.indexOf(carta)}" onclick="editar(this.id)">${carta.categoria}</p>
+                            <p id="funcao_carta${cartas.indexOf(carta)} onclick="editar(this.id)"" onclick="editar(this.id)"><strong>Função Biológica:</strong> ${carta.funcao}</p>
+                            <p id="amostra_carta${cartas.indexOf(carta)}" onclick="editar(this.id)"><strong>Amostra:</strong> ${carta.amostra}</p>
+                            <p id="tubo_carta${cartas.indexOf(carta)}" onclick="editar(this.id)"><strong>Coleta (Tubo):</strong> ${carta.tubo}</p>
+                            <p id="referencia_carta${cartas.indexOf(carta)}" onclick="editar(this.id)"><strong>Valores de Referência:</strong> ${carta.referencia}</p>
+                            <p id="preparo_carta${cartas.indexOf(carta)}" onclick="editar(this.id)"><strong>Preparo:</strong> ${carta.preparo1 ? carta.preparo1 : "--"}</p>
+                            <p id="aumento_carta${cartas.indexOf(carta)}" onclick="editar(this.id)"><strong>Aumento:</strong> ${carta.aumento}</p>
+                            <p id="diminuicao_carta${cartas.indexOf(carta)}" onclick="editar(this.id)"><strong>Diminuição:</strong> ${carta.diminuicao}</p>
                         </div>
                     `;
                     ultima = cardHTML;
                     container.innerHTML += cardHTML; // Adiciona a nova carta ao conjunto
                 });
-                adicionarSelecao();
             }
+
+            //--------------------------------------------------------------
+            //------------------- Botão de limpar todas --------------------
+            //--------------------------------------------------------------
 
             function limparCartas() {
                 cartas = []; // Zera o array de cartas
                 document.getElementById("conjunto-cartas").innerHTML = ""; // Limpa a exibição
             }
+
+            //--------------------------------------------------------------
+            //------------------- Botão de limpar ultima -------------------
+            //--------------------------------------------------------------
 
             function LimparUltima(){
                 const div = document.getElementById((cartas.length - 1).toString());
@@ -386,18 +408,30 @@
                 }
             }
 
+            //--------------------------------------------------------------
+            //----------------- Sistema de edição de carta -----------------
+            //--------------------------------------------------------------
+
+            function editar(id){
+                const p = document.getElementById(id);
+                p.contentEditable = "true";
+                p.focus();
+            }
+
+            //--------------------------------------------------------------
+            //----------------- Botão de limpar selecionada ----------------
+            //--------------------------------------------------------------
+
             let ultimaSelecionada = null;
 
-            function adicionarSelecao(){
-                document.getElementById('conjunto-cartas').addEventListener('click', (event) => {
-                    const carta = event.target.closest('.card');
-                    if (carta) {
-                        ultimaSelecionada = carta.id;
-                    }
-                });
-            }
-            
-            function EditarSelecionada(){
+            document.getElementById('conjunto-cartas').addEventListener('click', (event) => {
+                const carta = event.target.closest('.card');
+                if (carta) {
+                    ultimaSelecionada = carta.id;
+                }
+            });
+
+            function LimparSelecionada(){
                 if (ultimaSelecionada) {
                     const conteudo = document.getElementById(ultimaSelecionada).innerHTML;
                     console.log(conteudo);
@@ -405,6 +439,10 @@
                     alert('Selecione uma das cartas primeiro.');
                 }
             }
+
+            //--------------------------------------------------------------
+            //--------------------- Botão de gerar PDF ---------------------
+            //--------------------------------------------------------------
 
             function gerarPDF() {
                 const { jsPDF } = window.jspdf;
